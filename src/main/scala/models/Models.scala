@@ -20,9 +20,9 @@ object Models {
       name: String
   )
   case class ProductCategory(
-      id: String,
-      name: String,
-      `type`: String
+      @JsonProperty("id") id: String,
+      @JsonProperty("name") name: String,
+      @JsonProperty("type") `type`: String
   )
 
   case class SalesOrder(

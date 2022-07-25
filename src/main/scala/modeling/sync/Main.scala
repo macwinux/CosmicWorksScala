@@ -20,19 +20,24 @@ object Main extends App with LazyLogging with CosmosConfig {
     .contentResponseOnWriteEnabled(true)
     .buildClient()
   val deployment = new Deployment
+  /*
   deployment.createDatabase(client, 1)
   implicit val ec = ExecutionContext.Implicits.global
   deployment.loadDatabase()
   logger.info("""
   '''
     Load finished
-  '''""")
+  '''""")" +
+    "
+   */
   // deployment.deleteDatabases(client, 1)
-  /*val demo = new ModelingDemos
+  val demo = new ModelingDemos(client)
   logger.info("Start the query")
   demo.queryCustomer()
 
   logger.info("Start the direct get customer")
   demo.getCustomer()
-   */
+
+  logger.info("Start the product type list")
+  demo.listAllProductCategories()
 }

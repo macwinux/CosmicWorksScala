@@ -15,7 +15,7 @@ lazy val V = new {
   val slf4j = "1.7.36"
 }
 
-name := "cosmosdb-scala-workshop"
+name := "cosmicWorkScala"
 scalaVersion := "2.13.8"
 version := "0.0.1-SNAPSHOT"
 organization := "com.elastacloud"

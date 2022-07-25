@@ -25,6 +25,7 @@ import com.azure.cosmos.CosmosDatabase
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
+import cats.instances.lazyList
 class ModelingDemos(client: CosmosClient)
     extends AutoCloseable
     with CosmosConfig
@@ -43,7 +44,7 @@ class ModelingDemos(client: CosmosClient)
     val preferredPageSize = 10
     val queryOptions = new CosmosQueryRequestOptions()
     queryOptions.setQueryMetricsEnabled(true)
-    val customerId = "0012D555-C7DE-4C4B-B4A4-2E8A6B8E1161"
+    val customerId = "FFD0DD37-1F0E-4E2E-8FAC-EAF45B0E9447"
     import scala.jdk.CollectionConverters._
     val customerPagedIterable: CosmosPagedIterable[CustomerV2] =
       container
@@ -68,7 +69,7 @@ class ModelingDemos(client: CosmosClient)
     Try {
       val database: CosmosDatabase = client.getDatabase("database-v2")
       val container: CosmosContainer = database.getContainer("customer")
-      val customerId = "0012D555-C7DE-4C4B-B4A4-2E8A6B8E1161"
+      val customerId = "FFD0DD37-1F0E-4E2E-8FAC-EAF45B0E9447"
       val item: CosmosItemResponse[CustomerV2] =
         container.readItem(
           customerId,
@@ -88,6 +89,27 @@ class ModelingDemos(client: CosmosClient)
       case Failure(ex) =>
         ex.printStackTrace()
         logger.error(s"Read item failed with ${ex}")
+    }
+  }
+
+  def listAllProductCategories() = {
+    val database = client.getDatabase("database-v2")
+    val container = database.getContainer("productCategory")
+    val pageSize = 100
+    val queryOptions =
+      new CosmosQueryRequestOptions().setQueryMetricsEnabled(true)
+    val productTypesIterable = container.queryItems(
+      "SELECT * FROM c WHERE c.type = 'category'",
+      queryOptions,
+      classOf[ProductCategory]
+    )
+    import scala.jdk.StreamConverters._
+    productTypesIterable.stream().toScala(LazyList) foreach { cosmosRes =>
+      logger.info(s"""
+      '''''
+      Product types ${cosmosRes.name}
+      '''''
+      """)
     }
   }
 }
