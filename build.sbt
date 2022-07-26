@@ -8,7 +8,6 @@ lazy val V = new {
   val cosmos = "4.33.0"
   val test = "3.2.12"
   val reactor = "0.8.0"
-  val circe = "0.14.2"
   val zio = "2.0.0"
   val pureconfig = "0.17.1"
   val logger = "3.9.4"
@@ -36,9 +35,6 @@ ThisBuild / libraryDependencies ++= Seq(
   "com.github.pureconfig" %% "pureconfig" % V.pureconfig,
   "dev.zio" %% "zio" % V.zio,
   "io.projectreactor" %% "reactor-scala-extensions" % V.reactor,
-  "io.circe" %% "circe-core" % V.circe,
-  "io.circe" %% "circe-generic" % V.circe,
-  "io.circe" %% "circe-parser" % V.circe,
   "com.typesafe.scala-logging" %% "scala-logging" % V.logger,
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % V.jackson,
   "com.fasterxml.jackson.core" % "jackson-databind" % V.jackson,

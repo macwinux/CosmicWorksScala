@@ -25,7 +25,6 @@ import com.azure.cosmos.CosmosDatabase
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
-import cats.instances.lazyList
 class ModelingDemos(client: CosmosClient)
     extends AutoCloseable
     with CosmosConfig
@@ -45,7 +44,6 @@ class ModelingDemos(client: CosmosClient)
     val queryOptions = new CosmosQueryRequestOptions()
     queryOptions.setQueryMetricsEnabled(true)
     val customerId = "FFD0DD37-1F0E-4E2E-8FAC-EAF45B0E9447"
-    import scala.jdk.CollectionConverters._
     val customerPagedIterable: CosmosPagedIterable[CustomerV2] =
       container
         .queryItems(
@@ -54,14 +52,20 @@ class ModelingDemos(client: CosmosClient)
           classOf[CustomerV2]
         )
     import scala.jdk.StreamConverters._
-    val list: LazyList[CustomerV2] =
-      customerPagedIterable.stream.toScala(LazyList)
-    list foreach { productRes =>
+    customerPagedIterable
+      .streamByPage(preferredPageSize)
+      .toScala(LazyList) foreach { productRes =>
+      val result = productRes.getResults()
       logger.info(s"""
-      '''''
-      Item Ids ${productRes.id}
-      '''''
-      """)
+          ''''
+          Got a page of query result with ${result.size} items and request charge of ${productRes.getRequestCharge}
+          ''''
+        """)
+      logger.info(s"""
+        '''''
+        Customer id: ${result.asScala.map(_.id).mkString(",")}
+          '''''
+        """)
     }
   }
 
@@ -104,10 +108,49 @@ class ModelingDemos(client: CosmosClient)
       classOf[ProductCategory]
     )
     import scala.jdk.StreamConverters._
-    productTypesIterable.stream().toScala(LazyList) foreach { cosmosRes =>
+    productTypesIterable.streamByPage(pageSize).toScala(LazyList) foreach {
+      cosmosRes =>
+        val result = cosmosRes.getResults()
+        logger.info(s"""
+          ''''
+          Got a page of query result with ${result.size} items and request charge of ${cosmosRes.getRequestCharge}
+          ''''
+        """)
+        logger.info(s"""
+      '''''
+      Product types ${result.asScala.map(_.name).mkString(",")}
+      '''''
+      """)
+    }
+  }
+
+  def queryProductByCategoryId() = {
+    val database = client.getDatabase("database-v3")
+    val container = database.getContainer("product")
+    val size = 100
+    val queryOptions =
+      new CosmosQueryRequestOptions().setQueryMetricsEnabled(true)
+    val categoryId = "AB952F9F-5ABA-4251-BC2D-AFF8DF412A4A"
+    val queryProductByCategoryIterable = container.queryItems(
+      s"SELECT * FROM c WHERE c.categoryId = '$categoryId'",
+      queryOptions,
+      classOf[Product]
+    )
+    import scala.jdk.StreamConverters._
+    queryProductByCategoryIterable
+      .streamByPage(size)
+      .toScala(LazyList) foreach { cosmosRes =>
+      val result = cosmosRes.getResults()
+      logger.info(s"""
+          ''''
+          Got a page of query result with ${result.size} items and request charge of ${cosmosRes.getRequestCharge}
+          ''''
+        """)
       logger.info(s"""
       '''''
-      Product types ${cosmosRes.name}
+      Products by category $categoryId: ${result.asScala
+          .map(_.name)
+          .mkString(",")}
       '''''
       """)
     }

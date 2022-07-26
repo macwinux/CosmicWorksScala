@@ -10,11 +10,9 @@ import com.azure.cosmos.CosmosContainer
 import com.azure.cosmos.models.CosmosContainerResponse
 import com.azure.cosmos.models.CosmosContainerRequestOptions
 import scala.util.Try
-import cats.implicits._
 import com.azure.cosmos.models.CosmosDatabaseRequestOptions
 import java.util.concurrent.Executors
 import scala.concurrent.ExecutionContext
-import cats.instances.duration
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scala.concurrent.Await
@@ -23,7 +21,6 @@ import com.azure.cosmos.CosmosClientBuilder
 import com.azure.cosmos.ConsistencyLevel
 import java.nio.file.Path
 import java.nio.file.Paths
-import io.circe._, io.circe.parser._
 import reactor.core.scala.publisher.SFlux
 import com.azure.cosmos.models.CosmosBulkOperations
 import com.azure.cosmos.CosmosAsyncContainer
@@ -37,7 +34,6 @@ import reactor.core.publisher.Flux
 import java.util.ArrayList
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.circe.jawn.CirceSupportParser
 import com.azure.cosmos.implementation.Index
 import org.json.JSONObject
 

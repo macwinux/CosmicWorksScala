@@ -1,23 +1,21 @@
 package models
-import io.circe.{Encoder, Decoder}
-import io.circe.generic.semiauto.{deriveEncoder, deriveDecoder}
 import com.fasterxml.jackson.annotation.JsonProperty
 object Models {
 
   case class Product(
-      id: String,
-      categoryId: String,
-      categoryName: String,
-      sku: String,
-      name: String,
-      description: String,
-      price: Double,
-      tags: Array[Tag]
+      @JsonProperty("id") id: String,
+      @JsonProperty("categoryId") categoryId: String,
+      @JsonProperty("categoryName") categoryName: String,
+      @JsonProperty("sku") sku: String,
+      @JsonProperty("name") name: String,
+      @JsonProperty("description") description: String,
+      @JsonProperty("price") price: Double,
+      @JsonProperty("tags") tags: Array[Tag]
   )
 
   case class Tag(
-      id: String,
-      name: String
+      @JsonProperty("id") id: String,
+      @JsonProperty("name") name: String
   )
   case class ProductCategory(
       @JsonProperty("id") id: String,

@@ -40,4 +40,6 @@ object Main extends App with LazyLogging with CosmosConfig {
 
   logger.info("Start the product type list")
   demo.listAllProductCategories()
+
+  demo.queryProductByCategoryId()
 }
