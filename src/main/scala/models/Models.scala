@@ -95,4 +95,10 @@ object Models {
       password: Password,
       salesOrderCount: Int
   )
+
+  case class ProductCount(
+      @JsonProperty("productCount") productCount: Int,
+      @JsonProperty("categoryName") categoryName: String
+  )
+
 }

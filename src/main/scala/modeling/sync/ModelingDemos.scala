@@ -25,6 +25,7 @@ import com.azure.cosmos.CosmosDatabase
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
+import com.fasterxml.jackson.annotation.JsonProperty
 class ModelingDemos(client: CosmosClient)
     extends AutoCloseable
     with CosmosConfig
@@ -153,6 +154,36 @@ class ModelingDemos(client: CosmosClient)
           .mkString(",")}
       '''''
       """)
+    }
+  }
+
+  def queryProductForCategory() = {
+    val database = client.getDatabase("database-v3")
+    val container = database.getContainer("product")
+    val size = 100
+    val queryOptions =
+      new CosmosQueryRequestOptions().setQueryMetricsEnabled(true)
+    val sql = "SELECT COUNT(1) AS productCount, c.categoryName " +
+      "FROM c WHERE c.categoryId = '86F3CBAB-97A7-4D01-BABB-ADEFFFAED6B4' " +
+      "GROUP BY c.categoryName"
+
+    val queryProductByCategoryIterable =
+      container.queryItems(sql, queryOptions, classOf[ProductCount])
+    import scala.jdk.StreamConverters._
+    queryProductByCategoryIterable
+      .streamByPage(size)
+      .toScala(LazyList) foreach { cosmosRes =>
+      val result = cosmosRes.getResults()
+      logger.info(s"""
+          ''''
+          Got a page of query result with ${result.size} items and request charge of ${cosmosRes.getRequestCharge}
+          ''''
+        """)
+      result.forEach(product => logger.info(s"""
+        ''''
+          Product count: ${product.productCount}
+          Category Name: ${product.categoryName}
+        ''''"""))
     }
   }
 }
