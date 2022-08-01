@@ -12,6 +12,8 @@ lazy val V = new {
   val pureconfig = "0.17.1"
   val logger = "3.9.4"
   val slf4j = "1.7.36"
+  val cutils = "1.5.1"
+  val lclassic = "1.1.2"
 }
 
 name := "cosmicWorkScala"
@@ -38,7 +40,9 @@ ThisBuild / libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % V.logger,
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % V.jackson,
   "com.fasterxml.jackson.core" % "jackson-databind" % V.jackson,
-  "org.slf4j" % "slf4j-jdk14" % V.slf4j
+  "org.slf4j" % "slf4j-jdk14" % V.slf4j,
+  "org.clapper" %% "classutil" % V.cutils,
+  "ch.qos.logback" % "logback-classic" % V.lclassic
 )
 
 // Test settings

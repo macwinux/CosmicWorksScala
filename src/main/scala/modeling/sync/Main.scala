@@ -32,7 +32,7 @@ object Main extends App with LazyLogging with CosmosConfig {
    */
   // deployment.deleteDatabases(client, 1)
   val demo = new ModelingDemos(client)
-  /*logger.info("Start the query")
+  logger.info("Start the query")
   demo.queryCustomer()
 
   logger.info("Start the direct get customer")
@@ -40,7 +40,8 @@ object Main extends App with LazyLogging with CosmosConfig {
 
   logger.info("Start the product type list")
   demo.listAllProductCategories()
-   */
+
   demo.queryProductByCategoryId
   demo.queryProductForCategory
+  demo.updateProductCategory
 }

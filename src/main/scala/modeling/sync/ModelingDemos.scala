@@ -26,6 +26,8 @@ import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.azure.cosmos.models.CosmosItemRequestOptions
+import com.fasterxml.jackson.databind.DeserializationFeature
 class ModelingDemos(client: CosmosClient)
     extends AutoCloseable
     with CosmosConfig
@@ -185,5 +187,30 @@ class ModelingDemos(client: CosmosClient)
           Category Name: ${product.categoryName}
         ''''"""))
     }
+  }
+
+  def updateProductCategory() = {
+    val database = client.getDatabase("database-v3")
+    val container = database.getContainer("productCategory")
+    val categoryId = "006A1D51-28DA-4956-A7FB-C0B2BF6360CA"
+    logger.info("Update the name and replace 'and' with '&'")
+    val updateProductCategory: ProductCategory =
+      ProductCategory(categoryId, "Accessories, Bottles & Cages", "category")
+    val mapper = new ObjectMapper()
+    logger.info(
+      "Object in Json " + mapper.writeValueAsString(updateProductCategory)
+    )
+    val productCategoryResponse =
+      container.replaceItem(
+        updateProductCategory,
+        updateProductCategory.id,
+        new PartitionKey(updateProductCategory.`type`),
+        new CosmosItemRequestOptions()
+      )
+    logger.info(
+      s"Request charge of replace operation: ${productCategoryResponse.getRequestCharge} RU"
+    );
+
+    logger.info("Done.");
   }
 }

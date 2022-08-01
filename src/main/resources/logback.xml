@@ -1,7 +1,16 @@
 <configuration>
-    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender" />
-
-    <root level="error">
-        <appender-ref ref="stdout" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="colorAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d %green([%thread]) %highlight(%level) %logger{50} - %msg%n</pattern>
+        </layout>
+    </appender>
+    <root level="info">
+        <appender-ref ref="colorAppender" />
     </root>
+    <logger name="com.azure.cosmos" level="WARN" />
 </configuration>

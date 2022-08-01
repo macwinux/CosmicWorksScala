@@ -1,7 +1,9 @@
 package models
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonAutoDetect
 object Models {
-
+  @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+  trait CosmosCaseClass
   case class Product(
       @JsonProperty("id") id: String,
       @JsonProperty("categoryId") categoryId: String,
@@ -17,12 +19,12 @@ object Models {
       @JsonProperty("id") id: String,
       @JsonProperty("name") name: String
   )
+  @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
   case class ProductCategory(
       @JsonProperty("id") id: String,
       @JsonProperty("name") name: String,
       @JsonProperty("type") `type`: String
   )
-
   case class SalesOrder(
       id: String,
       `type`: String,
